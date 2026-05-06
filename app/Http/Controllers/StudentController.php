@@ -5,29 +5,42 @@ namespace App\Http\Controllers;
 use App\Models\Majors;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class StudentController extends Controller
 {
     public function index()
     {
+        if(!Gate::allows('view-student')) {
+            abort(401);
+        }
         $students = Student::with('major')->get();
         return view('students.index', compact('students'));
     }
 
     public function show(string $id)
     {
+        if(!Gate::allows('view-student')) {
+            abort(401);
+        }
         $student = Student::with('major')->findOrFail($id);
         return view('students.show', compact('student'));
     }
 
     public function create()
     {
+        if(!Gate::allows('store-student')) {
+            abort(401);
+        }
         $majors = Majors::all();
         return view('students.create', compact('majors'));
     }
 
     public function edit(string $id)
     {
+        if(!Gate::allows('edit-student')) {
+            abort(401);
+        }
         $student = Student::findOrFail($id);
         $majors = Majors::all();
         return view('students.edit', compact('student', 'majors'));
@@ -35,6 +48,9 @@ class StudentController extends Controller
 
     public function store(Request $request)
     {
+        if(!Gate::allows('store-student')) {
+            abort(401);
+        }
         $request->validate([
             'name'              => 'required',
             'student_id_number' => 'required|unique:students,student_id_number',
@@ -60,9 +76,12 @@ class StudentController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if(!Gate::allows('edit-student')) {
+            abort(401);
+        }
         $request->validate([
             'name'              => 'required',
-            'student_id_number' => 'required',
+            'student_id_number' => 'required|unique:students,student_id_number' . $id,
             'email'             => 'required|email',
             'gender'            => 'required',
             'majors'            => 'required',
@@ -86,6 +105,9 @@ class StudentController extends Controller
 
     public function destroy(string $id)
     {
+        if(!Gate::allows('destroy-student')) {
+            abort(401);
+        }
         Student::findOrFail($id)->delete();
         return redirect()->route('students.index')->with('success', 'Student deleted successfully.');
     }
