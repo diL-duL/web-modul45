@@ -6,6 +6,8 @@ use App\Models\Majors;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Ai\Agents\AcademicAgent; 
+use Laravel\Ai\Enums\Lab;
 
 class StudentController extends Controller
 {
@@ -111,7 +113,28 @@ class StudentController extends Controller
         Student::findOrFail($id)->delete();
         return redirect()->route('students.index')->with('success', 'Student deleted successfully.');
     }
+
+    public function analyzeCareer(string $id)
+    {
+        $student = Student::with('major')->findOrFail($id);
+
+        $response = AcademicAgent::make()->prompt(
+            "Berikan analisis terkait peluang karir
+            dan saran akademik untuk mahasiswa bernama
+            {$student->name} dari jurusan {$student->major->name}.
+            tidak perlu berikan pertanyaan lain, hanya berikan
+            analisis berdasarkan data yang saya berikan.",
+            provider: Lab::Gemini
+        );
+
+        return view('students.analysis', [
+            'student' => $student,
+            'analysis' => $response
+        ]);
+    }
 }
+
+
 
 // namespace App\Http\Controllers;
 

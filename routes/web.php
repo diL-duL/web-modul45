@@ -22,6 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
+    Route::post('/students/{id}/analyze', [StudentController::class, 'analyzeCareer'])->name('students.analyze');
+    Route::post('/majors/insights', [MajorsController::class, 'majorInsights'])->name('majors.insights');
+
     Route::get('/students', [StudentController::class, 'index'])->name('students.index');
     Route::get('/students/create', [StudentController::class, 'create'])->name('students.create');
     Route::post('/students', [StudentController::class, 'store'])->name('students.store');
@@ -40,7 +43,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-        // modul 5
+// modul 5
 
 // use App\Http\Controllers\DashboardController;
 // use App\Http\Controllers\StudentController;

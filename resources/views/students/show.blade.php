@@ -57,6 +57,13 @@
                     class="bg-yellow-500 border border-yellow-500 text-white px-3 py-2 flex items-center gap-2 cursor-pointer">
                     <span>Edit</span>
                 </a>
+                <form method="POST" action="{{ route('students.analyze', $student->id) }}">
+                    @csrf
+                    <button type="submit"
+                        class="bg-blue-500 border border-blue-500 text-white px-3 py-2 flex items-center gap-2 cursor-pointer">
+                        <i class="ph ph-sparkle"></i>
+                        <span>Analyze Career</span>
+                    </button>
             </div>
         </div>
     </div>

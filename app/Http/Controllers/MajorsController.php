@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Majors;
+use App\Models\Student;
+use App\Ai\Agents\AcademicAgent;
+use Laravel\Ai\Enums\Lab;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class MajorsController extends Controller
@@ -68,5 +72,28 @@ class MajorsController extends Controller
 
         $major->delete();
         return redirect()->route('majors.index')->with('success', 'Major deleted successfully!');
+    }
+
+    public function majorInsights()
+    {
+        $stats = Student::with('major')
+            ->select('major_id', 'status', DB::raw('count(*) as total'))
+            ->groupBy('major_id', 'status')
+            ->get();
+
+        $dataTeks = $stats->map(function ($item) {
+            return "Jurusan {$item->major->name} (Status {$item->status}: {$item->total} orang)";
+        })->implode(', ');
+
+        $insight = AcademicAgent::make()->prompt(
+            "Berikut adalah data statistik pada {$dataTeks}.
+            Tolong berikan:
+            1. Deskripsi singkat kondisi jurusan.
+            2. Evaluasi akademik.
+            3. Kritik dan saran untuk dosen.",
+            provider: Lab::Gemini
+        );
+
+        return view('majors.insight', compact('insight', 'stats'));
     }
 }

@@ -17,6 +17,13 @@
         <div class="flex gap-2 mt-4">
             <a href="{{ route('majors.index') }}" class="border border-slate-500 px-3 py-2">Back</a>
             <a href="{{ route('majors.edit', $major->id) }}" class="bg-yellow-500 text-white px-3 py-2">Edit</a>
+            <form method="POST" action="{{ route('majors.insights', $major->id) }}">
+                    @csrf
+                    <button type="submit"
+                        class="bg-indigo-500 border border-indigo-500 text-white px-3 py-2 flex items-center gap-2 cursor-pointer">
+                        <i class="ph ph-magic-wand"></i>
+                        <span>Major Insights</span>
+                    </button>
         </div>
     </div>
 </x-default-layout>
