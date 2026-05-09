@@ -57,13 +57,18 @@
                     class="bg-yellow-500 border border-yellow-500 text-white px-3 py-2 flex items-center gap-2 cursor-pointer">
                     <span>Edit</span>
                 </a>
-                <form method="POST" action="{{ route('students.analyze', $student->id) }}">
+            </div>
+            <div class="mt-6 border-t pt-4">
+                <h3 class="text-lg font-semibold">AI Career Assistant</h3>
+                <p class="text-sm text-gray-600 mb-4">Analisis prospek karir mahasiswa berdasarkan jurusan.</p>
+            
+                <form action="{{ route('students.analyze', $student->id) }}" method="POST">
                     @csrf
-                    <button type="submit"
-                        class="bg-blue-500 border border-blue-500 text-white px-3 py-2 flex items-center gap-2 cursor-pointer">
-                        <i class="ph ph-sparkle"></i>
-                        <span>Analyze Career</span>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded shadow
+                    hover:bg-blue-700">
+                        ✨ Generate Career Insights
                     </button>
+                </form>
             </div>
         </div>
     </div>
